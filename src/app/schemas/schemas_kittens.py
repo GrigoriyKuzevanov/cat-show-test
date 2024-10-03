@@ -13,6 +13,10 @@ class KittenCreate(KittenBase):
     pass
 
 
+class KittenUpdate(KittenBase):
+    pass
+
+
 class KittenOut(KittenBase):
     id: int
 

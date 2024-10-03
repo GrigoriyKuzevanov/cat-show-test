@@ -48,3 +48,30 @@ def post_kitten(
         )
 
     return crud_kittens.create_kitten(session=session, kitten=kitten)
+
+
+@kittens_router.put("/{kitten_id}", response_model=schemas_kittens.KittenOut)
+def update_kitten(
+    kitten_id: int,
+    kitten: schemas_kittens.KittenUpdate,
+    session: Session = Depends(get_db),
+):
+    db_kitten = crud_kittens.read_kitten_by_id(session=session, kitten_id=kitten_id)
+
+    if not db_kitten:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Kitten with id: {kitten_id} does not exist",
+        )
+
+    db_breed = crud_breeds.read_breed_by_id(session=session, breed_id=kitten.breed_id)
+
+    if not db_breed:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Breed with id: {kitten.breed_id} does not exist",
+        )
+
+    return crud_kittens.update_kitten(
+        session=session, update_data=kitten, db_kitten=db_kitten
+    )

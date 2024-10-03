@@ -30,3 +30,15 @@ def create_kitten(session: Session, kitten: schemas_kittens.KittenCreate) -> Kit
     session.refresh(db_kitten)
 
     return db_kitten
+
+
+def update_kitten(
+    session: Session, update_data: schemas_kittens.KittenUpdate, db_kitten: Kitten
+) -> Kitten:
+    for key, value in update_data.model_dump().items():
+        setattr(db_kitten, key, value)
+
+    session.commit()
+    session.refresh(db_kitten)
+
+    return db_kitten
