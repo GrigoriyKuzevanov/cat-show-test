@@ -42,3 +42,8 @@ def update_kitten(
     session.refresh(db_kitten)
 
     return db_kitten
+
+
+def delete_kitten(session: Session, db_kitten: Kitten) -> None:
+    session.delete(db_kitten)
+    session.commit()

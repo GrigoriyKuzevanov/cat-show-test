@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -75,3 +75,18 @@ def update_kitten(
     return crud_kittens.update_kitten(
         session=session, update_data=kitten, db_kitten=db_kitten
     )
+
+
+@kittens_router.delete("/{kitten_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_kitten(kitten_id: int, session: Session = Depends(get_db)):
+    db_kitten = crud_kittens.read_kitten_by_id(session=session, kitten_id=kitten_id)
+
+    if not db_kitten:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Kitten with id: {kitten_id} does not exist",
+        )
+
+    crud_kittens.delete_kitten(session=session, db_kitten=db_kitten)
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
