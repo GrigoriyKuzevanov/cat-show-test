@@ -9,3 +9,7 @@ def read_all_breeds(session: Session, limit: int, skip: int) -> list:
     db_breeds = session.scalars(stmt).all()
 
     return db_breeds
+
+
+def read_breed_by_id(session: Session, breed_id: int) -> Breed | None:
+    return session.get(Breed, breed_id)

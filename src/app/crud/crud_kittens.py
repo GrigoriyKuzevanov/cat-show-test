@@ -21,3 +21,12 @@ def read_kittens_by_breed_id(session: Session, breed_id: int) -> list:
 
 def read_kitten_by_id(session: Session, kitten_id: int) -> Kitten | None:
     return session.get(Kitten, kitten_id)
+
+
+def create_kitten(session: Session, kitten: schemas_kittens.KittenCreate) -> Kitten:
+    db_kitten = Kitten(**kitten.model_dump())
+    session.add(db_kitten)
+    session.commit()
+    session.refresh(db_kitten)
+
+    return db_kitten

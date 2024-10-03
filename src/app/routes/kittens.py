@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.crud import crud_kittens
+from app.crud import crud_breeds, crud_kittens
 from app.schemas import schemas_kittens
 
 kittens_router = APIRouter(prefix="/kittens", tags=["kittens"])
@@ -31,3 +31,20 @@ def get_kitten(kitten_id: int, session: Session = Depends(get_db)):
         )
 
     return db_kitten
+
+
+@kittens_router.post(
+    "/", response_model=schemas_kittens.KittenOut, status_code=status.HTTP_201_CREATED
+)
+def post_kitten(
+    kitten: schemas_kittens.KittenCreate, session: Session = Depends(get_db)
+):
+    db_breed = crud_breeds.read_breed_by_id(session=session, breed_id=kitten.breed_id)
+
+    if not db_breed:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Breed with id: {kitten.breed_id} does not exist",
+        )
+
+    return crud_kittens.create_kitten(session=session, kitten=kitten)
