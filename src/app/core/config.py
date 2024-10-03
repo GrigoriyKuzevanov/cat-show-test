@@ -8,7 +8,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 def parse_cors_origins(variable: str) -> list[str]:
     if isinstance(variable, str):
         return [item.strip() for item in variable.split(",")]
-    
+
     raise ValueError(variable)
 
 
@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     DB_PORT: int
     DB_NAME: str
     ECHO_SQL: bool
-    
+
     @computed_field
     @property
     def postgres_url(self) -> PostgresDsn:
@@ -32,11 +32,11 @@ class Settings(BaseSettings):
             port=self.DB_PORT,
             path=self.DB_NAME,
         )
-        
+
     # CORS settings
     CORS_ORIGINS: Annotated[str, BeforeValidator(parse_cors_origins)] = []
-    
+
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=True)
-    
-    
+
+
 settings = Settings()
