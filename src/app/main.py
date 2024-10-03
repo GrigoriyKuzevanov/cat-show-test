@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.app.core.config import settings
+from app.core.config import settings
 
 
 app = FastAPI(
@@ -19,7 +19,7 @@ if settings.CORS_ORIGINS:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.CORS_ORIGINS,
-        allow_credetials=True,
+        allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )

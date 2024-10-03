@@ -34,7 +34,7 @@ class Settings(BaseSettings):
         )
 
     # CORS settings
-    CORS_ORIGINS: Annotated[str, BeforeValidator(parse_cors_origins)] = []
+    CORS_ORIGINS: Annotated[str | list, BeforeValidator(parse_cors_origins)] = []
 
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=True)
 

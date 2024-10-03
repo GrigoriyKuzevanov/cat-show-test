@@ -1,9 +1,7 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.app.core.database import Base
-
-from . import Breed
+from app.core.database import Base
 
 
 class Kitten(Base):
@@ -18,4 +16,4 @@ class Kitten(Base):
     breed_id: Mapped[int] = mapped_column(
         ForeignKey("breed.id", ondelete="CASCADE"), nullable=False
     )
-    breed: Mapped[Breed] = relationship("Breed", back_populates="kittens")
+    breed: Mapped["Breed"] = relationship("Breed", back_populates="kittens")
