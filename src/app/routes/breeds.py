@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.crud import crud_breeds
-from app.models import Breed
 from app.schemas import schemas_breeds
 
 breeds_router = APIRouter(prefix="/breeds", tags=["breeds"])

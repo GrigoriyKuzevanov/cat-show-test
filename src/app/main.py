@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.routes import breeds_router
+from app.routes import breeds_router, kittens_router
 
 
 app = FastAPI(
@@ -27,3 +27,4 @@ if settings.CORS_ORIGINS:
 
 
 app.include_router(breeds_router)
+app.include_router(kittens_router)

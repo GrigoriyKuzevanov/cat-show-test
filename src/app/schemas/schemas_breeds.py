@@ -2,7 +2,6 @@ from pydantic import BaseModel
 
 
 class BreedBase(BaseModel):
-    id: int
     name: str
 
 
@@ -11,4 +10,7 @@ class BreedCreate(BreedBase):
 
 
 class BreedOut(BreedBase):
-    pass
+    id: int
+
+    class Config:
+        from_attributes = True
