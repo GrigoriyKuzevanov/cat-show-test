@@ -1,10 +1,10 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, PositiveInt
 
 
 class KittenBase(BaseModel):
     name: str
     color: str
-    age_months: int
+    age_months: PositiveInt
     description: str
     breed_id: int
 
