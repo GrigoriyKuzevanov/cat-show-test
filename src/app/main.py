@@ -10,7 +10,6 @@ app = FastAPI(
     description="Test task for WorkMate company",
     contact={
         "name": "Grigoriy Kuzevanov",
-        "email": "grkuzevanov@gmail.com",
         "url": "https://github.com/GrigoriyKuzevanov",
     },
 )
