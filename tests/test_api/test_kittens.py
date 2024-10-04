@@ -23,9 +23,7 @@ def test_get_kittens(client: TestClient, test_kittens: list[Kitten]) -> None:
         assert kitten.breed_id == test_kittens[index].breed_id
 
 
-def test_get_kittens_by_breed(
-    client: TestClient, test_kittens: list[Kitten], test_breeds: list[Breed]
-) -> None:
+def test_get_kittens_by_breed(client: TestClient, test_kittens: list[Kitten]) -> None:
     breed_id = test_kittens[0].breed_id
     response = client.get(f"/kittens/by_breed/{breed_id}")
 
@@ -64,12 +62,10 @@ def test_get_kitten(
 @pytest.mark.parametrize("kitten_id", [1, 2, 3])
 def test_get_kitten_not_exists(client: TestClient, kitten_id: int) -> None:
     response = client.get(f"/kittens/{kitten_id}")
+    error = KittenNotExistException(kitten_id=kitten_id)
 
-    assert response.status_code == 404
-    assert (
-        response.json().get("detail")
-        == KittenNotExistException(kitten_id=kitten_id).detail
-    )
+    assert response.status_code == error.status_code
+    assert response.json().get("detail") == error.detail
 
 
 def test_post_kitten(client: TestClient, test_breeds: list[Breed]) -> None:
@@ -106,12 +102,10 @@ def test_post_kitten_with_breed_not_exist(client: TestClient) -> None:
     }
 
     response = client.post("/kittens/", json=kitten_data)
+    error = BreedNotExistException(breed_id=kitten_data["breed_id"])
 
-    assert response.status_code == 404
-    assert (
-        response.json().get("detail")
-        == BreedNotExistException(breed_id=kitten_data["breed_id"]).detail
-    )
+    assert response.status_code == error.status_code
+    assert response.json().get("detail") == error.detail
 
 
 def test_update_kitten(client: TestClient, test_kittens: list[Kitten]) -> None:
@@ -137,3 +131,58 @@ def test_update_kitten(client: TestClient, test_kittens: list[Kitten]) -> None:
     assert updated_kitten.age_months == kitten_to_update.age_months
     assert updated_kitten.description == kitten_to_update.description
     assert updated_kitten.breed_id == kitten_to_update.breed_id
+
+
+@pytest.mark.parametrize("kitten_id", [1, 2, 3])
+def test_update_kitten_not_exist(client: TestClient, kitten_id: int) -> None:
+    update_data = {
+        "name": "Fluffy",
+        "color": "grey",
+        "age_months": 10,
+        "description": "Still a very nice kitten!",
+        "breed_id": 1,
+    }
+
+    response = client.put(f"/kittens/{kitten_id}", json=update_data)
+    error = KittenNotExistException(kitten_id=kitten_id)
+
+    assert response.status_code == error.status_code
+    assert response.json().get("detail") == error.detail
+
+
+def test_update_kitten_with_breed_not_exist(
+    client: TestClient, test_kittens: list[Kitten]
+) -> None:
+    kitten_id = test_kittens[0].id
+    wrong_breed_id = 1000
+    update_data = {
+        "name": "Fluffy",
+        "color": "grey",
+        "age_months": 10,
+        "description": "Still a very nice kitten!",
+        "breed_id": wrong_breed_id,
+    }
+
+    response = client.put(f"/kittens/{kitten_id}", json=update_data)
+    error = BreedNotExistException(breed_id=wrong_breed_id)
+
+    assert response.status_code == error.status_code
+    assert response.json().get("detail") == error.detail
+
+
+@pytest.mark.parametrize("kitten_id", [1, 2, 3])
+def test_delete_kitten(
+    client: TestClient, test_kittens: list[Kitten], kitten_id: int
+) -> None:
+    response = client.delete(f"/kittens/{kitten_id}")
+
+    assert response.status_code == 204
+
+
+@pytest.mark.parametrize("kitten_id", [1, 2, 3])
+def test_delete_kitten_not_exist(client: TestClient, kitten_id: int) -> None:
+    response = client.delete(f"/kittens/{kitten_id}")
+    error = KittenNotExistException(kitten_id=kitten_id)
+
+    assert response.status_code == error.status_code
+    assert response.json().get("detail") == error.detail
