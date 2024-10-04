@@ -15,23 +15,23 @@ API приложение, построенное с использованием
 git clone https://github.com/GrigoriyKuzevanov/cat-show-test.git
 cd cat-show-test/
 ```
-**В директории проекта создать файл .env, в котором необходимо указать несколько переменных:**
+**В директории проекта создать файл .env, в котором необходимо указать несколько переменных. Для быстрого старта приложения можете использовать значения переменных из примера или заменить значения своими:**
 
 ```
 # настройки основной базы данных
-DB_USER="Ваше имя пользователя"
-DB_PASSWORD="Ваш пароль"
+DB_USER=cat-show-db-user
+DB_PASSWORD=cat-show-db-password
 DB_HOST=db-main # не изменять, если приложение запускается с помощью docker
 DB_PORT=5432 # не изменять, если приложение запускается с помощью docker
-DB_NAME="Ваше название БД"
+DB_NAME=cat-show-db
 ECHO_SQL=False  # вы можете изменить, если хотите видеть SQL запросы формируемые приложением
 
 # настройки тестовой базы данных
-TEST_DB_USER="Ваше имя пользователя"
-TEST_DB_PASSWORD="Ваш пароль"
+TEST_DB_USER=cat-show-db-user-test
+TEST_DB_PASSWORD=cat-show-db-password-test
 TEST_DB_HOST=db-test  # не изменять, если приложение запускается с помощью docker
 TEST_DB_PORT=5432  # не изменять, если приложение запускается с помощью docker
-TEST_DB_NAME="Ваше название БД"
+TEST_DB_NAME=cat-show-db-test
 
 # настройка CORS
 # write down your origins or set it to '*' for all origins
