@@ -54,3 +54,40 @@ def test_breeds(session: Session) -> list[Breed]:
     db_breeds = session.scalars(stmt).all()
 
     return db_breeds
+
+
+@pytest.fixture
+def test_kittens(session: Session, test_breeds: list[Breed]) -> list[Kitten]:
+    kittens_data = [
+        {
+            "name": "Poppy",
+            "color": "red",
+            "age_months": 4,
+            "description": "A very nice kitten!",
+            "breed_id": test_breeds[0].id,
+        },
+        {
+            "name": "Misty",
+            "color": "black",
+            "age_months": 10,
+            "description": "A little kitten",
+            "breed_id": test_breeds[0].id,
+        },
+        {
+            "name": "Gizmo",
+            "color": "white",
+            "age_months": 7,
+            "description": "A cute tiny cat",
+            "breed_id": test_breeds[1].id,
+        },
+    ]
+
+    kittens_models = [Kitten(**kitten_data) for kitten_data in kittens_data]
+
+    session.add_all(kittens_models)
+    session.commit()
+
+    stmt = select(Kitten)
+    db_kittens = session.scalars(stmt).all()
+
+    return db_kittens
