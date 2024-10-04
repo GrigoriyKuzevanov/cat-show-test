@@ -1,5 +1,6 @@
 import logging
 
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from src.app.core.database import SessionLocal
@@ -13,11 +14,9 @@ def create_breeds(session: Session) -> None:
     try:
         breeds_data = [
             {
-                "id": 1,
                 "name": "Bengal",
             },
             {
-                "id": 2,
                 "name": "Siamese",
             },
         ]
@@ -33,30 +32,33 @@ def create_breeds(session: Session) -> None:
 
 def create_kittens(session: Session) -> None:
     try:
+        stmt = select(Breed)
+        breeds = session.scalars(stmt).all()
+        
         kittens_data = [
             {
-                "id": 1,
+                # "id": 1,
                 "name": "Poppy",
                 "color": "red",
                 "age_months": 4,
                 "description": "A very nice kitten!",
-                "breed_id": 1,
+                "breed_id": breeds[0].id,
             },
             {
-                "id": 2,
+                # "id": 2,
                 "name": "Misty",
                 "color": "black",
                 "age_months": 10,
                 "description": "A little kitten",
-                "breed_id": 1,
+                "breed_id": breeds[0].id,
             },
             {
-                "id": 3,
+                # "id": 3,
                 "name": "Gizmo",
                 "color": "white",
                 "age_months": 7,
                 "description": "A cute tiny cat",
-                "breed_id": 2,
+                "breed_id": breeds[1].id,
             },
         ]
 
