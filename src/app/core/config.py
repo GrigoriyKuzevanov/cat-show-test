@@ -33,6 +33,25 @@ class Settings(BaseSettings):
             path=self.DB_NAME,
         )
 
+    # testing postgres db settings
+    TEST_DB_USER: str
+    TEST_DB_PASSWORD: str
+    TEST_DB_HOST: str
+    TEST_DB_PORT: int
+    TEST_DB_NAME: str
+    
+    @computed_field
+    @property
+    def testing_postgres_url(self) -> PostgresDsn:
+        return MultiHostUrl.build(
+            scheme="postgresql",
+            username=self.TEST_DB_USER,
+            password=self.TEST_DB_PASSWORD,
+            host=self.TEST_DB_HOST,
+            port=self.TEST_DB_PORT,
+            path=self.TEST_DB_NAME,
+        )
+    
     # CORS settings
     CORS_ORIGINS: Annotated[str | list, BeforeValidator(parse_cors_origins)] = []
 

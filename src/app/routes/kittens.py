@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.orm import Session
 
-from app.core.database import get_db
-from app.crud import crud_breeds, crud_kittens
-from app.exceptions import KittenNotExistException, BreedNotExistException
-from app.schemas import schemas_kittens
+from src.app.core.database import get_db
+from src.app.crud import crud_breeds, crud_kittens
+from src.app.exceptions import KittenNotExistException, BreedNotExistException
+from src.app.schemas import schemas_kittens
 
 kittens_router = APIRouter(prefix="/kittens", tags=["kittens"])
 

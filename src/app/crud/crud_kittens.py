@@ -1,8 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models import Kitten
-from app.schemas import schemas_kittens
+from src.app.models import Kitten
+from src.app.schemas import schemas_kittens
 
 
 def read_all_kittens(session: Session, limit: int, skip: int) -> list:

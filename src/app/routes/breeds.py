@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from app.core.database import get_db
-from app.crud import crud_breeds
-from app.schemas import schemas_breeds
+from src.app.core.database import get_db
+from src.app.crud import crud_breeds
+from src.app.schemas import schemas_breeds
 
 breeds_router = APIRouter(prefix="/breeds", tags=["breeds"])
 
