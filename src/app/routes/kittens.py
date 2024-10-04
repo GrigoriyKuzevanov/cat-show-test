@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.crud import crud_breeds, crud_kittens
+from app.exceptions import KittenNotExistException, BreedNotExistException
 from app.schemas import schemas_kittens
 
 kittens_router = APIRouter(prefix="/kittens", tags=["kittens"])
@@ -23,12 +24,8 @@ def get_kittens_by_breed(breed_id: int, session: Session = Depends(get_db)):
 @kittens_router.get("/{kitten_id}", response_model=schemas_kittens.KittenOut)
 def get_kitten(kitten_id: int, session: Session = Depends(get_db)):
     db_kitten = crud_kittens.read_kitten_by_id(session=session, kitten_id=kitten_id)
-
     if not db_kitten:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Kitten with id: {kitten_id} does not exist",
-        )
+        raise KittenNotExistException(kitten_id=kitten_id)
 
     return db_kitten
 
@@ -40,12 +37,8 @@ def post_kitten(
     kitten: schemas_kittens.KittenCreate, session: Session = Depends(get_db)
 ):
     db_breed = crud_breeds.read_breed_by_id(session=session, breed_id=kitten.breed_id)
-
     if not db_breed:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Breed with id: {kitten.breed_id} does not exist",
-        )
+        raise BreedNotExistException(breed_id=kitten.breed_id)
 
     return crud_kittens.create_kitten(session=session, kitten=kitten)
 
@@ -57,20 +50,12 @@ def update_kitten(
     session: Session = Depends(get_db),
 ):
     db_kitten = crud_kittens.read_kitten_by_id(session=session, kitten_id=kitten_id)
-
     if not db_kitten:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Kitten with id: {kitten_id} does not exist",
-        )
+        raise KittenNotExistException(kitten_id=kitten_id)
 
     db_breed = crud_breeds.read_breed_by_id(session=session, breed_id=kitten.breed_id)
-
     if not db_breed:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Breed with id: {kitten.breed_id} does not exist",
-        )
+        raise BreedNotExistException(breed_id=kitten.breed_id)
 
     return crud_kittens.update_kitten(
         session=session, update_data=kitten, db_kitten=db_kitten
@@ -80,12 +65,8 @@ def update_kitten(
 @kittens_router.delete("/{kitten_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_kitten(kitten_id: int, session: Session = Depends(get_db)):
     db_kitten = crud_kittens.read_kitten_by_id(session=session, kitten_id=kitten_id)
-
     if not db_kitten:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Kitten with id: {kitten_id} does not exist",
-        )
+        raise KittenNotExistException(kitten_id=kitten_id)
 
     crud_kittens.delete_kitten(session=session, db_kitten=db_kitten)
 

@@ -1,0 +1,2 @@
+from .exceptions_breeds import BreedNotExistException
+from .exceptions_kittens import KittenNotExistException
